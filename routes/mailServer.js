@@ -22,7 +22,7 @@ router.post('/send/mail', (req,res) => {
       from : process.env.myMail,
       to : req.body.emailId,
       subject : req.body.subject,
-      text : req.body.mailBody
+      html : req.body.mailBody
   }
   transporter.sendMail(mailOptions, (err, response)=>{
     if(err){console.log(err)}

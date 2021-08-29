@@ -7,21 +7,23 @@
     <div class="container col-6 mt-5">
         <form id="myForm" name="myForm">
           <div class="container mb-3 col-6 mt-5 text-center">
-            <label  class="form-label">MAIL :- </label>
+            <i class="fas fa-envelope fa-2x"></i>
           </div>
         <div class="mb-3">
             <label  class="form-label">Email ID</label>
-            <input type="email" id="emailId"  name="emailId" class="form-control">
+            <input type="email" id="emailId"  name="emailId" class="form-control" placeholder="xyz@gmail.com">
           </div>
           <div class="mb-3">
-            <label class="form-label">write your Ans</label>
-            <input type="text" id="subject"  class="form-control" name="subject"/>
+            <label class="form-label">Subject</label>
+            <input type="text" id="subject"  class="form-control" name="subject" placeholder="Enter mail subject"/>
           </div>
           <div class="mb-3">
-            <label class="form-label">write your Ans</label>
-            <textarea class="form-control" id="mailBody" name="mailBody" rows="4"></textarea>
+            <label class="form-label">write your email</label>
+            <div id="editor-container" style="height: 150px;"></div>         
+           </div>
+          <div class="d-grid gap-2 col-6 mx-auto">
+            <input class="btn btn-success" type="submit" value="Send Mail"/>
           </div>
-          <input class="btn btn-success" type="submit" value="Submit"/>
         </form>
     </div>
     <div class="d-flex justify-content-center">
@@ -30,21 +32,38 @@
 </body>
 
 <script>
+  var toolbarOptions = [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{'header': 1}, {'header': 2}],
+                        [{'list': 'ordered'}, {'list': 'bullet'}],
+                        [{'script': 'sub'}, {'script': 'super'}],
+                        [{'indent': '-1'}, {'indent': '+1'}],
+                        [{'direction': 'rtl'}],
+                        [{'size': ['small', false, 'large', 'huge']}],
+                        ['link'],
+                        [{'color': []}, {'background': []}],
+                        [{'font': []}],
+                        [{'align': []}]
+                        ];
+  var quill = new Quill('#editor-container', {
+  modules: {
+    toolbar: toolbarOptions
+
+  },
+  placeholder: 'Write your mail...',
+  theme: 'snow'  // or 'bubble'
+});
+
   $('#image').hide();
   $(document).ready(function(){
   $("#myForm").on('submit', function(e) {
     e.preventDefault(); // avoid to execute the actual submit of the form. 
   
-    var fmd = {"emailId": $('#emailId').val(), "subject": $('#subject').val(), "mailBody": $('#mailBody').val()};
-    var frm = $(this);
-
-   
     const formData = new FormData(this);
-
-    
+    formData.append("mailBody" , quill.root.innerHTML);
     const entries = formData.entries();
     const dataa = Object.fromEntries(entries);
-    
     
     $.ajax({
            type: "POST",
