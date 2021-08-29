@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./layouts/head') %>
+</head>
+<body>
+    <div class="container col-6 mt-5">
+        <form id="myForm" name="myForm">
+          <div class="container mb-3 col-6 mt-5 text-center">
+            <label  class="form-label">MAIL :- </label>
+          </div>
+        <div class="mb-3">
+            <label  class="form-label">Email ID</label>
+            <input type="email" id="emailId"  name="emailId" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">write your Ans</label>
+            <input type="text" id="subject"  class="form-control" name="subject"/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">write your Ans</label>
+            <textarea class="form-control" id="mailBody" name="mailBody" rows="4"></textarea>
+          </div>
+          <input class="btn btn-success" type="submit" value="Submit"/>
+        </form>
+    </div>
+    <div class="d-flex justify-content-center">
+    <img  src="images/loader.gif"  id="image" alt="loader">
+    </div>
+</body>
+
+<script>
+  $('#image').hide();
+  $(document).ready(function(){
+  $("#myForm").on('submit', function(e) {
+    e.preventDefault(); // avoid to execute the actual submit of the form. 
+  
+    var fmd = {"emailId": $('#emailId').val(), "subject": $('#subject').val(), "mailBody": $('#mailBody').val()};
+    var frm = $(this);
+
+   
+    const formData = new FormData(this);
+
+    
+    const entries = formData.entries();
+    const dataa = Object.fromEntries(entries);
+    
+    
+    $.ajax({
+           type: "POST",
+           url: "/send/mail",
+           data: dataa,
+            beforeSend: function(){
+              $('#image').show();
+            },
+            success: function(res){
+              $('#image').hide();
+              console.log("success")
+              swal.fire(
+              'Mail Send!',
+              'congratsss!!!',
+              'success'
+            )
+            },
+            error: function (res){
+              $('#image').hide();
+              console.log(res);
+            }
+         });
+  });
+});
+</script>
+</html>
